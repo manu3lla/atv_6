@@ -1,6 +1,11 @@
 import pytest
 from imc import calcular_imc, categorizar_imc, classificar_pessoa
-
+# Exercício 1 - classes de equivalência
+#   Válidas:   CE1: imc < 18,5          -> "abaixo do peso"
+#              CE2: 18,5 <= imc < 25    -> "peso normal"
+#              CE3: 25 <= imc < 30      -> "sobrepeso"
+#              CE4: imc >= 30           -> "obesidade"
+#   Inválidas (em calcular_imc): peso <= 0 ou altura <= 0 -> ValueError
 def test_calcular_imc():
     assert calcular_imc(60, 2) == 15
 

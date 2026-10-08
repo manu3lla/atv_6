@@ -1,5 +1,13 @@
 import pytest
 from classificadores import classificar_por_faixas, classificar_vento
+# Exercício 3b - tabela de vento
+# Classes de equivalência:
+#   CE1: velocidade < 20         -> "calmo"
+#   CE2: 20 <= velocidade < 40   -> "moderado"
+#   CE3: 40 <= velocidade < 60   -> "forte"
+#   CE4: velocidade >= 60        -> "tempestade"
+# Valores-limite: 19/20, 39/40, 59/60 (logo abaixo e na fronteira), mais um representante do meio de cada classe.
+
 @pytest.mark.parametrize(
     "velocidade, esperado",
     [

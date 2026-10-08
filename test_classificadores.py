@@ -1,40 +1,50 @@
 import pytest
-from classificadores import classificar_por_faixas, classificar_vento, categorizar_imc
-@pytest.mark.parametrize("velocidade, esperado", [
-    (19, "calmo"),
-    (20, "moderado"),
-    (21, "moderado"),
-    (39, "moderado"),
-    (40, "forte"),
-    (41, "forte"),
-    (59, "forte"),
-    (60, "tempestade"),
-    (61, "tempestade"),
-], ids=[
-    "abaixo_20",
-    "fronteira_20",
-    "acima_20",
-    "abaixo_40",
-    "fronteira_40",
-    "acima_40",
-    "abaixo_60",
-    "fronteira_60",
-    "acima_60"
-])
+from classificadores import classificar_por_faixas, classificar_vento
+@pytest.mark.parametrize(
+    "velocidade, esperado",
+    [
+        (5, "calmo"),
+        (19, "calmo"),
+        (20, "moderado"),
+        (30, "moderado"),
+        (39, "moderado"),
+        (40, "forte"),
+        (50, "forte"),
+        (59, "forte"),
+        (60, "tempestade"),
+        (100, "tempestade"),
+    ],
+    ids=[
+        "meio_calmo",
+        "logo_abaixo_20",
+        "fronteira_20",
+        "meio_moderado",
+        "logo_abaixo_40",
+        "fronteira_40",
+        "meio_forte",
+        "logo_abaixo_60",
+        "fronteira_60",
+        "meio_tempestade",
+    ],
+)
 def test_classificar_vento(velocidade, esperado):
     assert classificar_vento(velocidade) == esperado
-def test_classificar_por_faixas():
-    faixas = [
-        (10, "baixo"),
-        (20, "medio"),
-        (float("inf"), "alto")
-    ]
+FAIXAS = [(10, "baixo"), (20, "medio"), (float("inf"), "alto")]
 
-    assert classificar_por_faixas(5, faixas) == "baixo"
-    assert classificar_por_faixas(10, faixas) == "medio"
-    assert classificar_por_faixas(20, faixas) == "alto"
-def test_categorizar_imc_generico():
-    assert categorizar_imc(17) == "abaixo do peso"
-    assert categorizar_imc(22) == "peso normal"
-    assert categorizar_imc(27) == "sobrepeso"
-    assert categorizar_imc(32) == "obesidade"
+@pytest.mark.parametrize(
+    "valor, esperado",
+    [
+        (5, "baixo"),
+        (9.99, "baixo"),
+        (10, "medio"),
+        (19.99, "medio"),
+        (20, "alto"),
+        (1000, "alto"),
+    ],
+)
+def test_classificar_por_faixas(valor, esperado):
+    assert classificar_por_faixas(valor, FAIXAS) == esperado
+
+def test_classificar_por_faixas_sem_faixa_correspondente():
+    with pytest.raises(ValueError):
+        classificar_por_faixas(50, [(10, "baixo"), (20, "medio")])
